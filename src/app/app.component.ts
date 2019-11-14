@@ -10,8 +10,8 @@ import { Response } from '@angular/http';
 })
 export class AppComponent {
   title = 'authentication-app';
-  servers=[{name:'Test server', capacity:10, id:this.generateId()},
-          {name:'Live server', capacity:100, id:this.generateId()}];
+  // servers=[{name:'Test server', capacity:10, id:this.generateId()},
+  //         {name:'Live server', capacity:100, id:this.generateId()}];
   onAddServer(name:string){
     this.servers.push({name:name,capacity:50,id:this.generateId()})
 
@@ -20,7 +20,15 @@ export class AppComponent {
     return Math.round(Math.random()*1000);
   
   }
-  constructor(private serversService:ServersService){}
+  servers:any[]
+  constructor(private serversService:ServersService){
+    this.serversService.getServers()
+    .subscribe((servers:any[])=>{
+      this.servers=servers;
+    },
+    (error)=>console.log(error))
+  }
+  
   onSave(){
     this.serversService.storeServers(this.servers)
     .subscribe((response)=>console.log(response),
